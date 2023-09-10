@@ -9,18 +9,20 @@ const User = require('../model/User');
 
 // Load Input Validation
 const validateRegisterInput = require('../validation/register');
+const validateLoginInput = require('../validation/login');
 
 // @route POST users/register
 // @description user registration
 // @access Public
 router.post('/register', (req, res) => {
     const { errors, isValid } = validateRegisterInput(req.body);
-    console.log(req.body);
+
     // Check Validation
     if (!isValid) {
         return res.status(400).json(errors);
     } else {
         User.findOne({ email: req.body.email }).then((user) => {
+            
             if (user) {
                 errors.email = 'User with this email already exists!';
                 res.status(400).json(errors);
@@ -54,6 +56,50 @@ router.post('/register', (req, res) => {
             }
         });
     }
+});
+
+// @route POST users/login
+// @description user registration
+// @access Public
+router.post('/login', (req, res) => {
+    const { errors, isValid } = validateLoginInput(req.body);
+
+    // Check Validation
+    if (!isValid) {
+        return res.status(400).json(errors);
+    } else {
+        const email = req.body.email;
+        const pass = req.body.password;
+
+        User.findOne({ email: email }).then((user) => {
+            if(!user) {
+                errors.email = "User not found!";
+                return res.status(400).json(errors);
+            }
+
+            bcrypt.compare(pass, user.password, (err, isMatch) => {
+                if(isMatch) {
+                    const payload = {
+                        id: user._id,
+                        name: user.name,
+                        email: user.email
+                    }
+
+                    jwt.sign(payload, process.env.secretOrKey, { expiresIn: '60m' }, (err, token) => {
+                        token = 'Bearer ' + token;
+                        res.status(200).json(token);
+                    });
+                } else {
+                    errors.password = 'Incorrect Password';
+                    res.status(400).json(errors);
+                }
+            });
+        });
+    }
+});
+
+router.get('/test', passport.authenticate('jwt', { session: false }), (req, res) => {
+    res.status(200).json("authentication works!");
 });
 
 module.exports = router;
