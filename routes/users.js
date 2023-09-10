@@ -80,12 +80,12 @@ router.post('/login', (req, res) => {
             bcrypt.compare(pass, user.password, (err, isMatch) => {
                 if(isMatch) {
                     const payload = {
-                        id: user._id,
+                        id: user.id,
                         name: user.name,
                         email: user.email,
                         role: user.role
                     }
-
+                    
                     jwt.sign(payload, process.env.secretOrKey, { expiresIn: '60m' }, (err, token) => {
                         token = 'Bearer ' + token;
                         res.status(200).json(token);
