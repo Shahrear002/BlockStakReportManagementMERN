@@ -59,7 +59,7 @@ router.post('/register', (req, res) => {
 });
 
 // @route POST users/login
-// @description user registration
+// @description user login
 // @access Public
 router.post('/login', (req, res) => {
     const { errors, isValid } = validateLoginInput(req.body);
@@ -87,8 +87,9 @@ router.post('/login', (req, res) => {
                     }
                     
                     jwt.sign(payload, process.env.secretOrKey, { expiresIn: '60m' }, (err, token) => {
-                        token = 'Bearer ' + token;
-                        res.status(200).json(token);
+                        token = token;
+                        res.cookie('accessToken', token, { maxAge: 3600000, httpOnly: true }).status(200).json('Log in successfull');
+                        // res.status(200).json(token);
                     });
                 } else {
                     errors.password = 'Incorrect Password';
@@ -99,8 +100,20 @@ router.post('/login', (req, res) => {
     }
 });
 
+
+// @route POST users/logout
+// @description user logout
+// @access Private
+router.get('/logout', passport.authenticate('jwt', { session: false }), (req, res) => {
+    res.clearCookie('accessToken').status(200).json('Successfully logged out!');
+});
+
+// @route POST users/test
+// @description testing route
+// @access Private
 router.get('/test', passport.authenticate('jwt', { session: false }), (req, res) => {
-    res.status(200).json("authentication works!");
+    // console.log(req.cookies.jwt);
+    res.status(200).json("authentication works, You are now logged in!!!");
 });
 
 module.exports = router;

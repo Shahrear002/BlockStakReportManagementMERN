@@ -3,11 +3,21 @@ const ExtractJwt = require('passport-jwt').ExtractJwt
 const mongoose = require('mongoose')
 const User = mongoose.model('User')
 
-const opts = {}
-opts.jwtFromRequest = ExtractJwt.fromAuthHeaderAsBearerToken()
-opts.secretOrKey = process.env.secretOrKey
+const cookieExtractor = (req) => {
+    let token = null;
+
+    if(req && req.cookies) {
+        token = req.cookies['accessToken'];
+    }
+
+    return token;
+}
 
 module.exports = passport => {
+    const opts = {}
+    opts.jwtFromRequest = cookieExtractor;
+    opts.secretOrKey = process.env.secretOrKey
+
     passport.use(new JwtStrategy(opts, (jwt_payload, done) => {
         User.findById(jwt_payload.id)
             .then(user => {
