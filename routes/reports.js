@@ -12,45 +12,82 @@ const validateReportInput = require('../validation/report');
 // @route POST reports/viewReports
 // @description view report
 // @access Private
-router.get('/viewReport', passport.authenticate('jwt', { session: false }), (req, res) => {
-    Report.find().then((reports) => {
-        if(reports.length == 0) {
-            res.status(400).json('No report found!');
-        }
+router.get(
+    '/viewReport',
+    passport.authenticate('jwt', { session: false }),
+    (req, res) => {
+        Report.find().then((reports) => {
+            if (reports.length == 0) {
+                res.status(400).json('No report found!');
+            }
 
-        res.status(200).json(reports);
-    });
-});
+            res.status(200).json(reports);
+        });
+    }
+);
 
 // @route POST reports/addReport
 // @description add report
 // @access Private
-router.post('/addReport', passport.authenticate('jwt', { session: false }), (req, res) => {
-    if(req.user.role === 'admin') {
-        const { errors, isValid } = validateReportInput(req.body);
+router.post(
+    '/addReport',
+    passport.authenticate('jwt', { session: false }),
+    (req, res) => {
+        if (req.user.role === 'admin') {
+            const { errors, isValid } = validateReportInput(req.body);
 
-        if(!isValid) {
-            res.status(400).json(errors);
+            if (!isValid) {
+                res.status(400).json(errors);
+            } else {
+                const newReport = new Report({
+                    reportName: req.body.reportName,
+                    email: req.body.email,
+                    phoneNumber: req.body.phoneNumber,
+                    profession: req.body.profession,
+                    address: req.body.address,
+                    favoriteColors: req.body.favoriteColors,
+                });
+
+                newReport
+                    .save()
+                    .then((report) => {
+                        res.status(200).json('Report added successfully.');
+                    })
+                    .catch((error) => {
+                        console.log(error);
+                        res.status(400).json('Report add failed!');
+                    });
+            }
         } else {
-            const newReport = new Report({
-                reportName: req.body.reportName,
-                email: req.body.email,
-                phoneNumber: req.body.phoneNumber,
-                profession: req.body.profession,
-                address: req.body.address,
-                favoriteColors: req.body.favoriteColors
-            });
-
-            newReport.save().then((report) => {
-                res.status(200).json('Report added successfully.');
-            }).catch((error) => {
-                console.log(error);
-                res.status(400).json('Report add failed!');
-            })
+            res.status(405).json('You are not allowed to add report');
         }
-    } else {
-        res.status(405).json('You are not allowed to add report');
     }
-});
+);
+
+// @route POST reports/deleteReport
+// @description delete report
+// @access Private
+router.delete(
+    '/deleteReport/:id',
+    passport.authenticate('jwt', { session: false }),
+    (req, res) => {
+        if (req.user.role === 'admin') {
+            Report.findByIdAndDelete(req.params.id)
+                .then((report) => {
+                    if (!report) {
+                        res.status(400).json('Report not found!');
+                    }
+
+                    res.status(200).json('Report deleted successfully.');
+                })
+                .catch((error) => {
+                    console.log(error);
+                    res.status(400).json('Report delete failed!');
+                });
+        } else {
+            res.status(405).json('You are not allowed to delete report');
+        }
+    }
+);
 
 module.exports = router;
