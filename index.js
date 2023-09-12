@@ -5,6 +5,7 @@ const passport = require('passport');
 const cookieParser = require('cookie-parser');
 
 const user = require('./routes/users');
+const report = require('./routes/reports');
 
 dotenv.config({ path: './config/.env' });
 
@@ -29,6 +30,7 @@ mongoose
     });
 
 app.use('/users', user);
+app.use('/reports', report);
 
 const PORT = process.env.PORT || 4000;
 app.listen(PORT, () => {

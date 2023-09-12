@@ -86,9 +86,9 @@ router.post('/login', (req, res) => {
                         role: user.role
                     }
                     
-                    jwt.sign(payload, process.env.secretOrKey, { expiresIn: '60m' }, (err, token) => {
+                    jwt.sign(payload, process.env.secretOrKey, { expiresIn: '10m' }, (err, token) => {
                         token = token;
-                        res.cookie('accessToken', token, { maxAge: 3600000, httpOnly: true }).status(200).json('Log in successfull');
+                        res.cookie('accessToken', token, { httpOnly: true }).status(200).json('Log in successfull');
                         // res.status(200).json(token);
                     });
                 } else {
@@ -112,8 +112,8 @@ router.get('/logout', passport.authenticate('jwt', { session: false }), (req, re
 // @description testing route
 // @access Private
 router.get('/test', passport.authenticate('jwt', { session: false }), (req, res) => {
-    // console.log(req.cookies.jwt);
-    res.status(200).json("authentication works, You are now logged in!!!");
+    console.log(req.user.role);
+    res.status(200).json('authentication works, You are now logged in!!!');
 });
 
 module.exports = router;
