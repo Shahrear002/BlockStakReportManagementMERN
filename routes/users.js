@@ -24,7 +24,7 @@ router.post('/register', (req, res) => {
         User.findOne({ email: req.body.email }).then((user) => {
             if (user) {
                 errors.email = 'User with this email already exists!';
-                res.status(400).json(errors);
+                return res.status(400).json(errors);
             } else {
                 const newUser = new User({
                     name: req.body.name,
@@ -91,10 +91,11 @@ router.post('/login', (req, res) => {
                         { expiresIn: '1h' },
                         (err, token) => {
                             token = token;
-                            res.cookie('accessToken', token, {
-                                maxAge: 3600000,
-                                httpOnly: true,
-                            })
+                            return res
+                                .cookie('accessToken', token, {
+                                    maxAge: 3600000,
+                                    httpOnly: true,
+                                })
                                 .status(200)
                                 .json('Log in successfull');
                             // res.status(200).json(token);
@@ -102,7 +103,7 @@ router.post('/login', (req, res) => {
                     );
                 } else {
                     errors.password = 'Incorrect Password';
-                    res.status(400).json(errors);
+                    return res.status(400).json(errors);
                 }
             });
         });
@@ -116,7 +117,8 @@ router.get(
     '/logout',
     passport.authenticate('jwt', { session: false }),
     (req, res) => {
-        res.clearCookie('accessToken')
+        return res
+            .clearCookie('accessToken')
             .status(200)
             .json('Successfully logged out!');
     }
@@ -125,32 +127,45 @@ router.get(
 // @route POST users/test
 // @description testing route
 // @access Private
-router.post(
-    '/refreshToken',
-    passport.authenticate('jwt', { session: false }),
-    (req, res) => {
-        const isActive = req.body.isActive;
+router.post('/refreshToken', (req, res) => {
+    const accessToken = req.cookies.accessToken;
 
-        if (isActive) {
-            const payload = {
-                id: req.user.id,
-                name: req.user.name,
-                email: req.user.email,
-                role: req.user.role,
-            };
-
-            const refreshToken = jwt.sign(payload, process.env.secretOrKey, {
-                expiresIn: '1h',
-            });
-
-            res.cookie('refreshToken', refreshToken, {
-                maxAge: 3600000,
-                httpOnly: true,
-            })
-                .status(200)
-                .json('Refresh token generated successfully!');
-        }
+    if (!accessToken) {
+        return res.status(400).json('Access token not found!');
     }
-);
+
+    jwt.verify(accessToken, process.env.secretOrKey, (err, decoded) => {
+        if (err) {
+            const isActive = req.body.isActive;
+
+            if (isActive) {
+                const payload = {
+                    id: req.user.id,
+                    name: req.user.name,
+                    email: req.user.email,
+                    role: req.user.role,
+                };
+
+                const refreshToken = jwt.sign(
+                    payload,
+                    process.env.secretOrKey,
+                    {
+                        expiresIn: '1h',
+                    }
+                );
+
+                return res
+                    .cookie('refreshToken', refreshToken, {
+                        maxAge: 3600000,
+                        httpOnly: true,
+                    })
+                    .status(200)
+                    .json('Refresh token generated successfully!');
+            }
+        } else {
+            return res.status(400).json('Access token is valid!');
+        }
+    });
+});
 
 module.exports = router;

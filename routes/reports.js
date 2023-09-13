@@ -18,10 +18,10 @@ router.get(
     (req, res) => {
         Report.find().then((reports) => {
             if (reports.length == 0) {
-                res.status(400).json('No report found!');
+                return res.status(400).json('No report found!');
             }
 
-            res.status(200).json(reports);
+            return res.status(200).json(reports);
         });
     }
 );
@@ -37,7 +37,7 @@ router.post(
             const { errors, isValid } = validateReportInput(req.body);
 
             if (!isValid) {
-                res.status(400).json(errors);
+                return res.status(400).json(errors);
             } else {
                 const newReport = new Report({
                     reportName: req.body.reportName,
@@ -55,11 +55,11 @@ router.post(
                     })
                     .catch((error) => {
                         console.log(error);
-                        res.status(400).json('Report add failed!');
+                        return res.status(400).json('Report add failed!');
                     });
             }
         } else {
-            res.status(405).json('You are not allowed to add report');
+            return res.status(405).json('You are not allowed to add report');
         }
     }
 );
@@ -75,17 +75,17 @@ router.delete(
             Report.findByIdAndDelete(req.params.id)
                 .then((report) => {
                     if (!report) {
-                        res.status(400).json('Report not found!');
+                        return res.status(400).json('Report not found!');
                     }
 
                     res.status(200).json('Report deleted successfully.');
                 })
                 .catch((error) => {
                     console.log(error);
-                    res.status(400).json('Report delete failed!');
+                    return res.status(400).json('Report delete failed!');
                 });
         } else {
-            res.status(405).json('You are not allowed to delete report');
+            return res.status(405).json('You are not allowed to delete report');
         }
     }
 );
@@ -117,11 +117,11 @@ router.post(
                         return res.status(400).json('Report not found!');
                     }
 
-                    return res.status(200).json('Report updated successfully.');
+                    res.status(200).json('Report updated successfully.');
                 })
                 .catch((error) => {
                     console.log(error);
-                    return res.status(400).json('Report update failed!');
+                    res.status(400).json('Report update failed!');
                 });
         } else {
             return res.status(405).json('You are not allowed to edit report');
