@@ -126,13 +126,18 @@ router.get(
 // @description testing route
 // @access Private
 router.post(
-    '/generate-refresh-token',
+    '/refreshToken',
     passport.authenticate('jwt', { session: false }),
     (req, res) => {
         const isActive = req.body.isActive;
 
         if (isActive) {
-            const payload = req.user;
+            const payload = {
+                id: req.user.id,
+                name: req.user.name,
+                email: req.user.email,
+                role: req.user.role,
+            };
 
             const refreshToken = jwt.sign(payload, process.env.secretOrKey, {
                 expiresIn: '1h',
