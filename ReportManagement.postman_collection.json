@@ -1,0 +1,304 @@
+{
+	"info": {
+		"_postman_id": "807455a2-61a6-4e98-9635-520c23230f97",
+		"name": "ReportManagement",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "4921692"
+	},
+	"item": [
+		{
+			"name": "http://localhost:4000/reports/addReport",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": [
+						{
+							"key": "reportName",
+							"value": "Test Report-2",
+							"type": "text"
+						},
+						{
+							"key": "email",
+							"value": "shahrear002@gmail.com",
+							"type": "text"
+						},
+						{
+							"key": "role",
+							"value": "admin",
+							"type": "text",
+							"disabled": true
+						},
+						{
+							"key": "password",
+							"value": "123456",
+							"type": "text",
+							"disabled": true
+						},
+						{
+							"key": "password2",
+							"value": "123456",
+							"type": "text",
+							"disabled": true
+						},
+						{
+							"key": "phoneNumber",
+							"value": "01714463551",
+							"type": "text"
+						},
+						{
+							"key": "profession",
+							"value": "Engineer",
+							"type": "text"
+						},
+						{
+							"key": "address",
+							"value": "Bashundhara RA",
+							"type": "text"
+						},
+						{
+							"key": "favoriteColor[0]",
+							"value": "Blue",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "http://localhost:4000/reports/addReport",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "4000",
+					"path": [
+						"reports",
+						"addReport"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "http://localhost:4000/reports/deleteReport/65000d7014dfbbf46c6b7d0c",
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:4000/reports/deleteReport/65000d7014dfbbf46c6b7d0c",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "4000",
+					"path": [
+						"reports",
+						"deleteReport",
+						"65000d7014dfbbf46c6b7d0c"
+					],
+					"query": [
+						{
+							"key": "",
+							"value": "65000d7014dfbbf46c6b7d0c",
+							"disabled": true
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "http://localhost:4000/reports/editReport/6500a1e00e6f987a3fd68c41",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": [
+						{
+							"key": "reportName",
+							"value": "Test Report-edit",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "http://localhost:4000/reports/editReport/6500a1e00e6f987a3fd68c41",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "4000",
+					"path": [
+						"reports",
+						"editReport",
+						"6500a1e00e6f987a3fd68c41"
+					],
+					"query": [
+						{
+							"key": "reportName",
+							"value": "Test report-edit",
+							"disabled": true
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "http://localhost:4000/users/login",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": [
+						{
+							"key": "email",
+							"value": "shahrear002@gmail.com",
+							"type": "text"
+						},
+						{
+							"key": "password",
+							"value": "123456",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "http://localhost:4000/users/login",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "4000",
+					"path": [
+						"users",
+						"login"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "http://localhost:4000/reports/viewReport",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:4000/reports/viewReport",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "4000",
+					"path": [
+						"reports",
+						"viewReport"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "http://localhost:4000/users/register",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": [
+						{
+							"key": "name",
+							"value": "Test",
+							"type": "text"
+						},
+						{
+							"key": "email",
+							"value": "test@test.com",
+							"type": "text"
+						},
+						{
+							"key": "password",
+							"value": "123456",
+							"type": "text"
+						},
+						{
+							"key": "password2",
+							"value": "123456",
+							"type": "text"
+						},
+						{
+							"key": "role",
+							"value": "user",
+							"type": "text"
+						},
+						{
+							"key": "phoneNumber",
+							"value": "01714463551",
+							"type": "text"
+						},
+						{
+							"key": "profession",
+							"value": "Engineer",
+							"type": "text"
+						},
+						{
+							"key": "address",
+							"value": "Dhaka",
+							"type": "text"
+						},
+						{
+							"key": "favoriteColors[0]",
+							"value": "Black",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "http://localhost:4000/users/register",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "4000",
+					"path": [
+						"users",
+						"register"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "http://localhost:4000/users/refreshToken",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": [
+						{
+							"key": "isActive",
+							"value": "true",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "http://localhost:4000/users/refreshToken",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "4000",
+					"path": [
+						"users",
+						"refreshToken"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
