@@ -91,7 +91,10 @@ router.post('/login', (req, res) => {
                         { expiresIn: '1h' },
                         (err, token) => {
                             token = token;
-                            res.cookie('accessToken', token, { httpOnly: true })
+                            res.cookie('accessToken', token, {
+                                maxAge: 3600000,
+                                httpOnly: true,
+                            })
                                 .status(200)
                                 .json('Log in successfull');
                             // res.status(200).json(token);
@@ -122,12 +125,26 @@ router.get(
 // @route POST users/test
 // @description testing route
 // @access Private
-router.get(
-    '/test',
+router.post(
+    '/generate-refresh-token',
     passport.authenticate('jwt', { session: false }),
     (req, res) => {
-        console.log(req.user.role);
-        res.status(200).json('authentication works, You are now logged in!!!');
+        const isActive = req.body.isActive;
+
+        if (isActive) {
+            const payload = req.user;
+
+            const refreshToken = jwt.sign(payload, process.env.secretOrKey, {
+                expiresIn: '1h',
+            });
+
+            res.cookie('refreshToken', refreshToken, {
+                maxAge: 3600000,
+                httpOnly: true,
+            })
+                .status(200)
+                .json('Refresh token generated successfully!');
+        }
     }
 );
 
