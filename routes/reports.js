@@ -90,4 +90,43 @@ router.delete(
     }
 );
 
+// @route POST reports/editReport
+// @description edit report
+// @access Private
+router.post(
+    '/editReport/:id',
+    passport.authenticate('jwt', { session: false }),
+    (req, res) => {
+        if (req.user.role === 'admin') {
+            if (Object.keys(req.body).length === 0) {
+                return res.status(400).json('Required fields can not null!');
+            }
+
+            const update = {};
+            for (const key of Object.keys(req.body)) {
+                if (req.body[key] !== '') {
+                    update[key] = req.body[key];
+                }
+            }
+
+            const filter = { _id: req.params.id };
+
+            Report.findOneAndUpdate(filter, { $set: update }, { new: true })
+                .then((report) => {
+                    if (!report) {
+                        return res.status(400).json('Report not found!');
+                    }
+
+                    return res.status(200).json('Report updated successfully.');
+                })
+                .catch((error) => {
+                    console.log(error);
+                    return res.status(400).json('Report update failed!');
+                });
+        } else {
+            return res.status(405).json('You are not allowed to edit report');
+        }
+    }
+);
+
 module.exports = router;

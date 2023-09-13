@@ -22,7 +22,6 @@ router.post('/register', (req, res) => {
         return res.status(400).json(errors);
     } else {
         User.findOne({ email: req.body.email }).then((user) => {
-            
             if (user) {
                 errors.email = 'User with this email already exists!';
                 res.status(400).json(errors);
@@ -72,25 +71,32 @@ router.post('/login', (req, res) => {
         const pass = req.body.password;
 
         User.findOne({ email: email }).then((user) => {
-            if(!user) {
-                errors.email = "User not found!";
+            if (!user) {
+                errors.email = 'User not found!';
                 return res.status(400).json(errors);
             }
 
             bcrypt.compare(pass, user.password, (err, isMatch) => {
-                if(isMatch) {
+                if (isMatch) {
                     const payload = {
                         id: user.id,
                         name: user.name,
                         email: user.email,
-                        role: user.role
-                    }
-                    
-                    jwt.sign(payload, process.env.secretOrKey, { expiresIn: '10m' }, (err, token) => {
-                        token = token;
-                        res.cookie('accessToken', token, { httpOnly: true }).status(200).json('Log in successfull');
-                        // res.status(200).json(token);
-                    });
+                        role: user.role,
+                    };
+
+                    jwt.sign(
+                        payload,
+                        process.env.secretOrKey,
+                        { expiresIn: '1h' },
+                        (err, token) => {
+                            token = token;
+                            res.cookie('accessToken', token, { httpOnly: true })
+                                .status(200)
+                                .json('Log in successfull');
+                            // res.status(200).json(token);
+                        }
+                    );
                 } else {
                     errors.password = 'Incorrect Password';
                     res.status(400).json(errors);
@@ -100,20 +106,29 @@ router.post('/login', (req, res) => {
     }
 });
 
-
 // @route POST users/logout
 // @description user logout
 // @access Private
-router.get('/logout', passport.authenticate('jwt', { session: false }), (req, res) => {
-    res.clearCookie('accessToken').status(200).json('Successfully logged out!');
-});
+router.get(
+    '/logout',
+    passport.authenticate('jwt', { session: false }),
+    (req, res) => {
+        res.clearCookie('accessToken')
+            .status(200)
+            .json('Successfully logged out!');
+    }
+);
 
 // @route POST users/test
 // @description testing route
 // @access Private
-router.get('/test', passport.authenticate('jwt', { session: false }), (req, res) => {
-    console.log(req.user.role);
-    res.status(200).json('authentication works, You are now logged in!!!');
-});
+router.get(
+    '/test',
+    passport.authenticate('jwt', { session: false }),
+    (req, res) => {
+        console.log(req.user.role);
+        res.status(200).json('authentication works, You are now logged in!!!');
+    }
+);
 
 module.exports = router;
