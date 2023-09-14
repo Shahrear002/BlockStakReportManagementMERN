@@ -2,12 +2,12 @@
 
 ### To Run the app (Server)
 
-##### make sure, BlockStakReportManagementMERN/ directory & type the following command
+##### make sure, you are in BlockStakReportManagementMERN/ directory & type the following command
 
 ```sh
-$ npm install
-$ npm run dev
+$ docker-compose up -d
 ```
+##### API server will run on port 4000
 
 ### Created  all necessary  api endpoints for user registration, login, add  report, view report, edit report and delete report
 ## API Endpoints
