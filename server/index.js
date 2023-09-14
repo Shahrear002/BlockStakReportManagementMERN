@@ -15,8 +15,8 @@ app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
 app.use(cookieParser());
 
-app.use(passport.initialize())
-require('./config/passport')(passport)
+app.use(passport.initialize());
+require('./config/passport')(passport);
 
 mongoose
     .connect(process.env.DB_CONNECT, {
