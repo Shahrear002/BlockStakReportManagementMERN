@@ -2,6 +2,6 @@ FROM node:alpine
 
 WORKDIR /server
 COPY package*.json .
-RUN npm ci
+RUN npm install
 COPY . .
 CMD npm run dev

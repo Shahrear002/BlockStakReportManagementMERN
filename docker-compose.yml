@@ -3,23 +3,22 @@ services:
   server:
     build: ./server
     ports:
-      - "4000:5000"
+      - "4000:4000"
     restart: always
-    environment:
-      PORT: 5000
-      MONGO_INITDB_ROOT_PASSWORD: shahrear
-      MONGO_URI: mongodb://shahrear:shahrear@mongo:27017/
-    depends_on:
-      - mongo
-  mongo:
+    container_name: server
+    networks:
+      - my-networks
+  my-mongodb:
     image: mongo:latest
+    ports:
+      - "27017:27017"
     restart: always
     container_name: my-mongodb
     volumes:
       - ./data:/data/db
     networks:
-      - app-net
+      - my-networks
 networks:
-  app-net:
-
+  my-networks:
+    driver: bridge
 
