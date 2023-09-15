@@ -19,7 +19,7 @@ app.use(passport.initialize());
 require('./config/passport')(passport);
 
 mongoose
-    .connect('mongodb://my-mongodb:27017/', {
+    .connect(process.env.DB_CONNECT, {
         useNewUrlParser: true,
     })
     .then(() => {
