@@ -20,5 +20,5 @@ $ docker-compose up -d
 * /reports/deleteReport/:id - admin user can delete report
   
 # Postman Collection
-You can find the postman collection [here](https://github.com/Shahrear002/BlockStakReportManagementMERN/blob/main/ReportManagement.postman_collection.json) 
+You can find the postman collection [here](https://github.com/Shahrear002/BlockStakReportManagementMERN/blob/main/server/ReportManagement.postman_collection.json) 
 Or you can check <a href="https://documenter.getpostman.com/view/4921692/2s9YC4VYp2" target="_blank">this</a> postman documentation to test the API endpoints.
